@@ -8,6 +8,7 @@ import { paginate } from "../utils/paginate";
 import ListGroup from "./common/listGroup";
 import Pagination from "./common/pagination";
 import MoviesTable from "./moviesTable";
+import SearchBox from "./common/searchBox";
 
 class Movies extends Component {
   state = {
@@ -15,6 +16,8 @@ class Movies extends Component {
     genres: [],
     currentPage: 1,
     pageSize: 4,
+    searchQuery: "",
+    selectedGenre: null,
     sortColumn: { colRefs: "title", order: "asc" }
   };
 
@@ -52,6 +55,15 @@ class Movies extends Component {
   handleGenreSelect = genre => {
     this.setState({
       selectedGenre: genre,
+      searchQuery: "",
+      currentPage: 1
+    });
+  };
+
+  handleSearch = query => {
+    this.setState({
+      searchQuery: query,
+      selectedGenre: null,
       currentPage: 1
     });
   };
@@ -68,13 +80,17 @@ class Movies extends Component {
       currentPage,
       sortColumn,
       movies: allMovies,
-      selectedGenre
+      selectedGenre,
+      searchQuery
     } = this.state;
 
-    const filtered =
-      selectedGenre && selectedGenre._id
-        ? allMovies.filter(m => m.genre._id === selectedGenre._id)
-        : allMovies;
+    let filtered = allMovies;
+    if (searchQuery)
+      filtered = allMovies.filter(m =>
+        m.title.toLowerCase().startsWith(searchQuery.toLowerCase())
+      );
+    else if (selectedGenre && selectedGenre._id)
+      filtered = allMovies.filter(m => m.genre._id === selectedGenre._id);
 
     const sorted = _.orderBy(
       filtered,
@@ -94,7 +110,8 @@ class Movies extends Component {
       currentPage,
       sortColumn,
       genres,
-      selectedGenre
+      selectedGenre,
+      searchQuery
     } = this.state;
 
     if (count === 0) return <p>There's no movies in the database!</p>;
@@ -121,6 +138,7 @@ class Movies extends Component {
             </span>
             movies from the database!
           </p>
+          <SearchBox value={searchQuery} onChange={this.handleSearch} />
           <MoviesTable
             movies={movies}
             sortColumn={sortColumn}
