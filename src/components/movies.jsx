@@ -1,5 +1,6 @@
 import _ from "lodash";
 import React, { Component } from "react";
+import { Link } from "react-router-dom";
 
 import { getGenres } from "../services/mockGenreService";
 import { getMovies } from "../services/mockMovieService";
@@ -110,6 +111,9 @@ class Movies extends Component {
           />
         </div>
         <div className="col">
+          <Link to="/movies/new" className="btn btn-secondary btn-sm mb-3">
+            <i className="fa fa-plus" /> Movie
+          </Link>
           <p>
             Showing
             <span className="badge badge-primary badge-pill m-1">
