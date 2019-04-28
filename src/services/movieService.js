@@ -3,28 +3,35 @@ import { baseUrl } from "../config.json";
 
 const apiEndpoint = `${baseUrl}/movies`;
 
-export function getMovies() {
-  return http.get(`${apiEndpoint}`);
+function getMovies() {
+  return http.get(apiEndpoint);
 }
 
-export function getMovie(id) {
+function getMovie(id) {
   return http.get(`${apiEndpoint}/${id}`);
 }
 
-function saveMovie(movie) {
-  return http.post(`${apiEndpoint}`, movie);
+function _saveMovie(movie) {
+  return http.post(apiEndpoint, movie);
 }
 
-function updateMovie(movie) {
+function _updateMovie(movie) {
   const movieRefs = { ...movie };
   delete movieRefs._id;
   return http.put(`${apiEndpoint}/${movie._id}`, movieRefs);
 }
 
-export function updateOrSaveMovie(movie) {
-  return movie._id ? updateMovie(movie) : saveMovie(movie);
+function updateOrSaveMovie(movie) {
+  return movie._id ? _updateMovie(movie) : _saveMovie(movie);
 }
 
-export function deleteMovie(id) {
+function deleteMovie(id) {
   return http.delete(`${apiEndpoint}/${id}`);
 }
+
+export default {
+  getMovies,
+  getMovie,
+  updateOrSaveMovie,
+  deleteMovie
+};

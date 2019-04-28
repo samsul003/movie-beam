@@ -4,3 +4,7 @@ import { baseUrl } from "../config.json";
 export function getGenres() {
   return http.get(`${baseUrl}/genres`);
 }
+
+export default {
+  getGenres
+};

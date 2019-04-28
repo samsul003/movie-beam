@@ -3,8 +3,8 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 
-import { getGenres } from "../services/genreService";
-import { getMovies, deleteMovie } from "../services/movieService";
+import genreService from "../services/genreService";
+import movieService from "../services/movieService";
 import { paginate } from "../utils/paginate";
 import ListGroup from "./common/listGroup";
 import Pagination from "./common/pagination";
@@ -23,10 +23,10 @@ class Movies extends Component {
   };
 
   async componentDidMount() {
-    const { data: genresData } = await getGenres();
+    const { data: genresData } = await genreService.getGenres();
     const genres = [{ _id: "", name: "All Genres" }, ...genresData];
 
-    const { data: movies } = await getMovies();
+    const { data: movies } = await movieService.getMovies();
     this.setState({
       movies,
       genres
@@ -41,7 +41,7 @@ class Movies extends Component {
     });
 
     try {
-      await deleteMovie(movie._id);
+      await movieService.deleteMovie(movie._id);
     } catch (ex) {
       if (ex.response && ex.response.status === 404)
         toast.error("This movie has already been deleted!");
